@@ -3,7 +3,7 @@
 //
 #include"movements.h"
 
-/*
+/**
  * red +ve
  * black -ve
  * up +ve
@@ -14,23 +14,19 @@
 #define up 1
 #define down -1
 #define CENTER_THROTTLE 1500
-//read pins form file??
 // this function is responsible for setting the motors pins and give it the CENTER_THROTTLE value
 void movements::setPins(int pins[])
 {
-    //_motors={&_l1,&_l2,&_r1,&_r2,&_v1,&_v2,&_v3};
-    //_numberOfMotors=sizeof(pins)/sizeof(pins[0]);
     for(int i=0;i<_numberOfMotors;i++)
     {
         _motors[i]->attach(pins[i]);
         _motors[i]->writeMicroseconds(CENTER_THROTTLE);
     }
-    //delay(7000);
 }
 //this function is responsible for forward movement 
 void movements::forward(int speed)
 {
-    /*
+    /**
      * _l1->red
      * _l2->red
      * _r1->red
@@ -45,7 +41,7 @@ void movements::forward(int speed)
 }
 void movements::backward(int speed)
 {
-    /*
+    /**
      * _l1->black
      * _l2->black
      * _r1->black
@@ -60,7 +56,7 @@ void movements::backward(int speed)
 }
 void movements::right(int speed)
 {
-    /*
+    /**
      * _l1->red
      * _l2->black
      * _r1->black
@@ -76,7 +72,7 @@ void movements::right(int speed)
 }
 void movements::left(int speed)
 {
-    /*
+    /**
      * _l1->black
      * _l2->red
      * _r1->red
@@ -92,7 +88,7 @@ void movements::left(int speed)
 }
 void movements::turnRight(int speed)
 {
-    /*
+    /**
      * _l1->red
      * _l2->red
      * _r1->black
@@ -108,7 +104,7 @@ void movements::turnRight(int speed)
 }
 void movements::turnLeft(int speed)
 {
-    /*
+    /**
      * _l1->black
      * _l2->black
      * _r1->red
@@ -124,7 +120,7 @@ void movements::turnLeft(int speed)
 }
 void movements::upwards(int speed)
 {
-    /*
+    /**
      * _v1->up
      * _v2->up
      */
@@ -135,7 +131,7 @@ void movements::upwards(int speed)
 }
 void movements::downwards(int speed)
 {
-    /*
+    /**
      * _v1->down
      * _v2->down
      */
@@ -146,7 +142,7 @@ void movements::downwards(int speed)
 }
 void movements::turnForwardAboutX_Axis(int speed)
 {
-    /*
+    /**
      * _v3->up
      */
     speed=min(speed,maxVertical_V3_PWM);
@@ -155,7 +151,7 @@ void movements::turnForwardAboutX_Axis(int speed)
 }
 void movements::turnBackwardAboutX_Axis(int speed)
 {
-    /*
+    /**
      * _v3->down
      */
     speed=min(speed,maxVertical_V3_PWM);
@@ -164,7 +160,7 @@ void movements::turnBackwardAboutX_Axis(int speed)
 }
 void movements::turnRightAboutY_Axis(int speed)
 {
-    /*
+    /**
      * _v1->up
      * _v2->down
      */
@@ -176,7 +172,7 @@ void movements::turnRightAboutY_Axis(int speed)
 }
 void movements::turnLeftAboutY_Axis(int speed)
 {
-    /*
+    /**
      * _v1->down
      * _v2->up
      */

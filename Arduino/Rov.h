@@ -7,31 +7,36 @@
 #include "Arduino.h"
 #include "movements.h"
 #include <SPI.h>
+#define leakageSensor 2
+#define clock 9
+#define l1 3
+#define l2 4
+#define r1 5
+#define r2 6
+#define v1 7
+#define v2 8
+#define v3 10
 class Rov
 {
 public:
     Rov();
     void run();
 private:
-
-    bool _move=false;
     float _temp=0;
     float _previousTemp=0;
     long _pressure=0;
     long _previousPressure=0;
+    int _previousDirection=-1;
     movements _motors;
-    String _previousCommand="";
-    String _command="";
-    float _speed=-1;
-    float _previousSpeed=-1;
     bool _leak();
     unsigned int _Calibration(unsigned int secondByte);
-    float _speedValues(float speed);
-    void _movementsCommands();
     void _resetSensor();
     void _tempAndPressure(long &pressure,float& temp);
     void _sensors();
-    void _readingMovements();
+    void _readingCommands();
+    //void _move();
+    //void _movementsWithoutSpeed(int direction);
+    void _movementsWithSpeed(int direction,int speed);
 
 };
 

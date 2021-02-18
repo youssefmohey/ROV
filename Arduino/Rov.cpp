@@ -2,15 +2,7 @@
 // Created by Youssef on 1/22/2021.
 //
 #include "Rov.h"
-#define leakageSensor 2
-#define clock 9
-#define l1 3
-#define l2 4
-#define r1 5
-#define r2 6
-#define v1 7
-#define v2 8
-#define v3 10
+
 Rov::Rov()
 {
     int motorPins[]={l1,l2,r1,r2,v1,v2,v3};
@@ -27,97 +19,87 @@ void Rov::run()
     _sensors();
     //if the motors directions & speed sent in serial
     if(Serial.available())
-        _readingMovements();
+        _readingCommands();
 }
-//This function is responsible for reading movement command and speed from serial and executing the move
-void Rov::_readingMovements()
+void Rov::_readingCommands()
 {
-    _command = Serial.readStringUntil('\n');
-    Serial.print("command :");
-    Serial.println(_command);
-    bool flag=true;
-    if(_command!=_previousCommand)
+    char command =Serial.read();
+    if(command>>7==1);
+    //movement command
+    else
+    {
+        int direction=command & 15;
+        int speed = command >> 4;
+        speed *=50;
+        _movementsWithSpeed(direction,speed);
+    }
+}
+
+void Rov::_movementsWithSpeed(int direction,int speed)
+{
+    /**
+     * 0-> Stop
+     * 1-> Forward
+     * 2-> backward
+     * 3-> right
+     * 4-> left
+     * 5-> turnRight
+     * 6-> turnLeft
+     * 7-> downwards
+     * 8-> upwards
+     * 9-> turnForwardAboutX_Axis
+     * 10-> turnBackwardAboutX_Axis
+     * 11-> turnRightAboutY_Axis
+     * 12-> turnLeftAboutY_Axis
+     */
+    //modify constant speed moves
+    if(_previousDirection!=direction)
     {
         _motors.stop();
-        _previousCommand=_command;
-        flag=false;
-        Serial.println("different command");
+        _previousDirection=direction;
     }
-    if(_command=="Stop")
-        return;
-    while (!Serial.available());
-    _speed = Serial.parseFloat();
-    Serial.readStringUntil('\n');
-    Serial.print("speed : ");
-    Serial.println(_speed);
-    if (_speed == _previousSpeed && flag) {
-        Serial.println("same command&speed");
-        return;
+    switch (direction)
+    {
+        case 0:
+            _motors.stop();
+            break;
+        case 1:
+            _motors.forward(speed);
+            break;
+        case 2:
+            _motors.backward(speed);
+            break;
+        case 3:
+            _motors.right(speed);
+            break;
+        case 4:
+            _motors.left(speed);
+            break;
+        case 5:
+            _motors.turnRight(speed);
+            break;
+        case 6:
+            _motors.turnLeft(speed);
+            break;
+        case 7:
+            _motors.downwards(speed);
+            break;
+        case 8:
+            _motors.upwards(speed);
+            break;
+        case 9:
+            _motors.turnForwardAboutX_Axis(speed);
+            break;
+        case 10:
+            _motors.turnBackwardAboutX_Axis(speed);
+            break;
+        case 11:
+            _motors.turnRightAboutY_Axis(speed);
+            break;
+        case 12:
+            _motors.turnLeftAboutY_Axis(speed);
+            break;
     }
-    _previousSpeed =_speed ;
-    _speed=_speedValues(_speed);
-    Serial.println(_speed);
-    _movementsCommands();
-}
-//this function responsible for changing the value of spped to value acceptable by functions of movement
-float Rov::_speedValues(float speed)
-{
-    if(speed<=0)
-        speed=1-abs(speed);
-    else
-        speed=1+speed;
-    if(_command=="turnForwardAboutX_Axis"||_command=="turnBackwardAboutX_Axis")
-        speed*=(_motors.maxVertical_V3_PWM/2);
-    else if(_command=="forward"||_command=="backward"||_command=="right"||_command=="left")
-        speed*=(_motors.maxHorizontalPWM/2);
-    else
-        speed*=(_motors.maxVertical_V1_V2_PWM/2);
-    //Serial.println(speed);
-    return speed;
-}
-//this function is responsible for calling proper function for the given command
-void Rov::_movementsCommands()
-{
-    /*
-     * forward
-     * backward
-     * right
-     * left
-     * turnRight
-     * turnLeft
-     * downwards
-     * upwards
-     * turnForwardAboutX_Axis
-     * turnBackwardAboutX_Axis
-     * turnRightAboutY_Axis
-     * turnLeftAboutY_Axis
-     */
-    if(_command=="forward")
-        _motors.forward(_speed);
-    else if (_command=="backward")
-        _motors.backward(_speed);
-    else if(_command=="right")
-        _motors.right(_speed);
-    else if(_command=="left")
-        _motors.left(_speed);
-    else if(_command=="turnRight")
-        _motors.turnRight(_speed);
-    else if(_command=="turnLeft")
-        _motors.turnLeft(_speed);
-    else if(_command=="downwards")
-        _motors.downwards(_speed);
-    else if(_command=="upwards")
-        _motors.upwards(_speed);
-    else if(_command=="turnForwardAboutX_Axis")
-        _motors.turnForwardAboutX_Axis(_speed);
-    else if(_command=="turnBackwardAboutX_Axis")
-        _motors.turnBackwardAboutX_Axis(_speed);
-    else if(_command=="turnRightAboutY_Axis")
-        _motors.turnRightAboutY_Axis(_speed);
-    else if(_command=="turnLeftAboutY_Axis")
-        _motors.turnLeftAboutY_Axis(_speed);
-    else if(_command=="stop")
-    	_motors.stop();
 }
 //this function is responsible for sending sensors values in serial if the values changed
 void Rov::_sensors()
