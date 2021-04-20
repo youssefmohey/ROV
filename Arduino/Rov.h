@@ -26,7 +26,8 @@ private:
     float _previousTemp=0;
     long _pressure=0;
     long _previousPressure=0;
-    int _previousDirection=-1;
+    int _previousDirection=0;
+    int _previousSpeed=0;
     movements _motors;
     bool _leak();
     unsigned int _Calibration(unsigned int secondByte);

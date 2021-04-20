@@ -52,12 +52,13 @@ void Rov::_movementsWithSpeed(int direction,int speed)
      * 11-> turnRightAboutY_Axis
      * 12-> turnLeftAboutY_Axis
      */
-    //modify constant speed moves
+    
+    if(speed==_previousSpeed&&direction==_previousDirection)
+        return;
     if(_previousDirection!=direction)
-    {
         _motors.stop();
-        _previousDirection=direction;
-    }
+    _previousDirection=direction;
+    _previousSpeed=speed;
     switch (direction)
     {
         case 0:
