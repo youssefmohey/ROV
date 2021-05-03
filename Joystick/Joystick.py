@@ -4,7 +4,7 @@ import serial
 
 arduino = serial.Serial('COM4',9600) # cahnge '/dev/ttyACM0' to the port the arduino connected to it 
 time.sleep(2) #wait for 2 secounds for the communication to get established
-print (arduino.readline())
+#print (arduino.readline())
 
 currentSpeed = 1
 currentDirection = 0
@@ -136,10 +136,10 @@ done = True
 font = pygame.font.Font(None, 20)
 linesize = font.get_linesize()
 
-#joyStick = initialize("5-Axis,12-Button with POV")
-#buttonsNum = joyStick.get_numbuttons()
-#axesNum = joyStick.get_numaxes()
-#hatNum = joyStick.get_numhats()
+joyStick = initialize("5-Axis,12-Button with POV")
+buttonsNum = joyStick.get_numbuttons()
+axesNum = joyStick.get_numaxes()
+hatNum = joyStick.get_numhats()
 while done:
     # wait until any change(input) in joystick
     for event in pygame.event.get():  # User did something.
